@@ -85,10 +85,14 @@ exports.login = async (req, res) => {
       expiresIn: "2h",
     });
 
+    res.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 2 * 60 * 60 * 1000, // 2 hours
+    });
+
     return res.status(200).json({
       success: true,
       message: "Logged in successfully",
-      token,
       user: {
         id: user._id,
         name: user.name,
@@ -96,7 +100,6 @@ exports.login = async (req, res) => {
         role: user.role,
       },
     });
-
   } catch (error) {
     console.error("Login error:", error);
     return res.status(500).json({
